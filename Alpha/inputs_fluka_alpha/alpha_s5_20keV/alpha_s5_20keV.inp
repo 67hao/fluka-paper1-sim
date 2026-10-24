@@ -1,0 +1,33 @@
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7...
+TITLE
+MSP + Projected Range - ALPHA (4-HELIUM) in Glass S5 @ 20 keV
+DEFAULTS                                                              PRECISIO
+BEAM       -2.000E-5       0.0       0.0       0.0       0.0       1.04-HELIUM
+BEAMPOS          0.0       0.0 -2.274E-8
+GEOBEGIN                                                              COMBNAME
+    0    0          MSP/Range geometry - 1 khoi S5 glass (alpha, co lop dem block)
+SPH blkbody    0.0 0.0 0.0 300.0
+SPH outerbnd   0.0 0.0 0.0 100.0
+RPP target     -1.0 1.0 -1.0 1.0 0.0 1.1368E-4
+END
+BLKHOLE      5 +blkbody -outerbnd
+TARGET       5 +target
+VACUUM       5 +outerbnd -target
+END
+GEOEND
+MATERIAL         5.0    10.811      2.34       0.0                 0.0BORON
+MATERIAL        57.0   138.905     6.145       0.0                 0.0LANTHANU
+MATERIAL         0.0       0.0    3.7699       0.0                 0.0S5GLASS
+COMPOUND      -0.075     BORON   -0.2996    OXYGEN   -0.0195   SILICONS5GLASS
+COMPOUND     -0.0278   CALCIUM   -0.5783  LANTHANU       0.0          S5GLASS
+ASSIGNMA    BLCKHOLE   BLKHOLE
+ASSIGNMA     S5GLASS    TARGET
+ASSIGNMA      VACUUM    VACUUM
+PART-THR     -1.0E-5  4-HELIUM
+USRBIN          10.0      DOSE     -21.0       1.0       1.0  9.947E-5TDOSE
+USRBIN          -1.0      -1.0       0.0       1.0       1.0     500.0&
+USRBIN          10.0  4-HELIUM     -22.0       1.0       1.0  9.947E-5TFLUX
+USRBIN          -1.0      -1.0       0.0       1.0       1.0     500.0&
+RANDOMIZ         1.0
+START      1000000.0                                     0.0
+STOP

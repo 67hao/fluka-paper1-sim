@@ -1,0 +1,17 @@
+cd vào mục này 
+nhập bề dày và năng lượng mong muốn vào thickness_table.csv 
+
+nhập projected range lấy từ srim vào srim_range_table.csv 
+
+python3 generate_msp_range_inputs_alpha_fluka.py srim_range_table.csv inputs_fluka/
+$tạo file inp theo mẫu
+
+python3 run_batch_fluka.py inputs_fluka_alpha/ outputs_fluka/ rfluka 20 --cycles 1
+$chạy fiel inp vừa tạp , có thể custom core chạy và cycle
+
+bash merge_all.sh /home/ht/flukasp/MAC/outputs_fluka 20 
+$merge các file output vừa chạy (file cần kết quả sẽ là .lis) 
+
+python3 parse_msp_range_fluka_alpha.py thickness_table.xlsx outputs_fluka/ msp_range_fluka_results.xlsx
+$xuất ra excel 
+

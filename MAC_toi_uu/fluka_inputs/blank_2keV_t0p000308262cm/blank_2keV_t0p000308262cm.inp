@@ -1,0 +1,50 @@
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7...
+TITLE
+Gamma attenuation - I0 (NO sample, gap 0.000308262 cm) - 2keV
+DEFAULTS                                                              PRECISIO
+BEAM          -2e-06       0.0       0.0       0.0       0.0       1.0PHOTON
+BEAMPOS          0.0       0.0       0.0
+GEOBEGIN                                                              COMBNAME
+    0    0          Attenuation geometry - NO sample
+SPH blkbody    0.0 0.0 0.0 300.0
+SPH outerbnd   0.0 0.0 0.0 100.0
+SPH source     0.0 0.0 0.0 1.0
+RCC coll1o     0.0 0.0 2.0 0.0 0.0 10.0 1.0
+RCC coll1i     0.0 0.0 2.0 0.0 0.0 10.0 0.25
+RCC coll2o     0.0 0.0 12.000308 0.0 0.0 10.000000 1.0
+RCC coll2i     0.0 0.0 12.000308 0.0 0.0 10.000000 0.25
+RCC detect     0.0 0.0 22.000308 0.0 0.0 5.000000 5.0
+END
+BLKHOLE      5 +blkbody -outerbnd
+SOURCE       5 +source
+COLLIM1      5 +coll1o -coll1i -source
+HOLE1        5 +coll1i -source
+COLLIM2      5 +coll2o -coll2i
+HOLE2        5 +coll2i
+DETECTOR     5 +detect
+VACUUM       5 +outerbnd -coll1o -coll2o -detect -source
+END
+GEOEND
+MATERIAL         5.0    10.811      2.34       0.0                 0.0BORON
+MATERIAL        57.0   138.905     6.145       0.0                 0.0LANTHANU
+MATERIAL        53.0   126.904      4.93       0.0                 0.0IODINE
+MATERIAL         0.0       0.0      3.67       0.0                 0.0NAIIOD
+COMPOUND    -0.15337    SODIUM  -0.84663    IODINE       0.0          NAIIOD
+ASSIGNMA    BLCKHOLE   BLKHOLE
+ASSIGNMA         AIR    SOURCE
+ASSIGNMA        LEAD   COLLIM1
+ASSIGNMA      VACUUM     HOLE1
+ASSIGNMA        LEAD   COLLIM2
+ASSIGNMA      VACUUM     HOLE2
+ASSIGNMA      NAIIOD  DETECTOR
+ASSIGNMA      VACUUM    VACUUM
+PHOTONUC         1.0                      BLCKHOLE  @LASTMAT
+EMFCUT       -0.0001     1e-06       1.0       1.0  @LASTMAT       1.0PROD-CUT
+EMFCUT       -0.0001     1e-06       0.0   BLKHOLE  @LASTREG       1.0
+USRBDX          99.0    PHOTON     -22.0     HOLE2  DETECTOR   0.19635I0ph1
+USRBDX       2.1e-06   1.8e-06     100.0                              &
+USRTRACK        -1.0    PHOTON     -23.0  DETECTOR     392.7     110.0Itrk1
+USRTRACK     2.1e-06   1.8e-06                                        &
+RANDOMIZ         1.0
+START      1000000.0                                     0.0
+STOP

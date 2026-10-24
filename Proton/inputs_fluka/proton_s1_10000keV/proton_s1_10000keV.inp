@@ -1,0 +1,33 @@
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7...
+TITLE
+MSP + Projected Range - PROTON in Glass S1 @ 10000 keV
+DEFAULTS                                                              PRECISIO
+BEAM       -1.000E-2       0.0       0.0       0.0       0.0       1.0PROTON
+BEAMPOS          0.0       0.0 -1.090E-4
+GEOBEGIN                                                              COMBNAME
+    0    0          MSP/Range geometry - 1 khoi S1 glass
+SPH blkbody    0.0 0.0 0.0 300.0
+SPH outerbnd   0.0 0.0 0.0 100.0
+RPP target     -1.0 1.0 -1.0 1.0 0.0 1.0898E-1
+END
+BLKHOLE      5 +blkbody -outerbnd
+TARGET       5 +target
+VACUUM       5 +outerbnd -target
+END
+GEOEND
+MATERIAL         5.0    10.811      2.34       0.0                 0.0BORON
+MATERIAL        57.0   138.905     6.145       0.0                 0.0LANTHANU
+MATERIAL         0.0       0.0    3.0099       0.0                 0.0S1GLASS
+COMPOUND     -0.1629     BORON   -0.4648    OXYGEN   -0.0302   SILICONS1GLASS
+COMPOUND     -0.0431   CALCIUM    -0.299  LANTHANU       0.0          S1GLASS
+ASSIGNMA    BLCKHOLE   BLKHOLE
+ASSIGNMA     S1GLASS    TARGET
+ASSIGNMA      VACUUM    VACUUM
+PART-THR     -1.0E-5    PROTON
+USRBIN          10.0      DOSE     -21.0       1.0       1.0  1.090E-1TDOSE
+USRBIN          -1.0      -1.0       0.0       1.0       1.0     300.0&
+USRBIN          10.0    PROTON     -22.0       1.0       1.0  1.090E-1TFLUX
+USRBIN          -1.0      -1.0       0.0       1.0       1.0     300.0&
+RANDOMIZ         1.0
+START      1000000.0                                     0.0
+STOP

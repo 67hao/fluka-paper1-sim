@@ -1,0 +1,7 @@
+$FLUPRO/flutil/fff source_watt_template.f
+$FLUPRO/flutil/lfluka -m fluka -o phits_ca_watt source_watt_template.o
+/chay 2 lenh nay de apply excutable tu custom 
+
+chay lan luot cac file inp bang flair merge ca  ket qua
+
+double click vao gop_tot_response.py de loc ket qua 

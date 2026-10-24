@@ -1,0 +1,14 @@
+cd vào mục này 
+nhập bề dày và năng lượng mong muốn vào thickness_table.csv 
+
+python3 generate_fluka_inputs.py thickness_table.xlsx fluka_inputs/
+$tao cac file input 
+
+python3 run_batch_fluka.py fluka_inputs/ outputs_fluka/ rfluka 28 --cycles 1
+$chạy các file inp vauwf tạo có thể custom số core và cycle 
+
+bash merge_all.sh /home/ht/flukasp/MAC/outputs_fluka 20 
+$merge các file output vừa chạy (file cần kết quả sẽ là .lis) 
+
+python3 parse_fluka_results.py thickness_table.xlsx outputs_fluka/ flux_results.xlsx
+$xuất ra file excel 
