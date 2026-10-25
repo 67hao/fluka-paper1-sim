@@ -189,6 +189,22 @@ def compute_range(flux_parsed: dict) -> float:
     return R_cm * 1e4
 
 
+def check_truncation(flux_parsed: dict) -> str:
+    """Hat van con 'song' o bin z cuoi (S = flux*Area > 0.1%) -> zmax tally qua
+    nho, Range bi CAT CUT tai zmax (MSP van dung). Tra ve chuoi mo ta, rong neu OK.
+    LUU Y: FLUKA co multiple scattering nen flux*Area la quang duong di (path
+    length) trong bin, co the hoi > 1 o dau duong di - chi dung bin CUOI de kiem tra."""
+    xmin, xmax, _ = flux_parsed["axes"]["X"]
+    ymin, ymax, _ = flux_parsed["axes"]["Y"]
+    area_cm2 = (xmax - xmin) * (ymax - ymin)
+    s_last = flux_parsed["values"][-1] * area_cm2
+    if s_last > 1e-3:
+        zmax_um = flux_parsed["axes"]["Z"][1] * 1e4
+        return (f"S(zmax)={s_last:.3f}, zmax={zmax_um:.4g} um -> Range bi CAT CUT, "
+                f"can chay lai voi SAFETY_MARGIN lon hon")
+    return ""
+
+
 def find_energy_column(df: pd.DataFrame) -> str:
     for c in df.columns:
         if "energy" in c.lower():
@@ -212,7 +228,7 @@ def main(excel_path: str, outputs_dir: str, result_path: str):
         msp_result[mat] = None
         range_result[mat] = None
 
-    missing, parse_errors = [], []
+    missing, parse_errors, truncated = [], [], []
 
     for idx, row in df.iterrows():
         energy_kev = float(row[energy_col])
@@ -231,9 +247,12 @@ def main(excel_path: str, outputs_dir: str, result_path: str):
             try:
                 msp = compute_msp_entrance(dose_pair[1])
                 rng = compute_range(flux_pair[1])
+                trunc_msg = check_truncation(flux_pair[1])
             except Exception as e:
                 parse_errors.append(f"{job_name}: {e}")
                 continue
+            if trunc_msg:
+                truncated.append(f"{job_name}: {trunc_msg}")
 
             msp_result.loc[idx, mat] = msp
             range_result.loc[idx, mat] = rng
@@ -251,6 +270,10 @@ def main(excel_path: str, outputs_dir: str, result_path: str):
         print(f"\nCANH BAO: {len(parse_errors)} loi khi doc/tinh:")
         for e in parse_errors[:20]:
             print(" -", e)
+    if truncated:
+        print(f"\nCANH BAO: {len(truncated)} job co Range bi CAT CUT (gia tri Range SAI, MSP van dung):")
+        for t in truncated:
+            print(" -", t)
 
 
 if __name__ == "__main__":

@@ -27,9 +27,9 @@ DETECTOR     5 +detect
 VACUUM       5 +outerbnd -coll1o -sample -coll2o -detect -source
 END
 GEOEND
-MATERIAL         5.0    10.811      2.34       0.0                 0.0BORON
-MATERIAL        57.0   138.905     6.145       0.0                 0.0LANTHANU
-MATERIAL        53.0   126.904      4.93       0.0                 0.0IODINE
+MATERIAL         5.0       0.0      2.34       0.0                 0.0BORON
+MATERIAL        57.0       0.0     6.145       0.0                 0.0LANTHANU
+MATERIAL        53.0       0.0      4.93       0.0                 0.0IODINE
 MATERIAL         0.0       0.0    3.1999       0.0                 0.0S2GLASS
 COMPOUND     -0.1329     BORON   -0.4086    OXYGEN   -0.0266   SILICONS2GLASS
 COMPOUND     -0.0379   CALCIUM   -0.3941  LANTHANU       0.0          S2GLASS

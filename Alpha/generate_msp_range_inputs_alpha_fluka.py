@@ -92,6 +92,8 @@ NZ_BINS = 500                   # ALPHA: so bin doc truc z cho 2 USRBIN (dose + 
 SAFETY_MARGIN = 1.6             # he so mesh zmax = SAFETY_MARGIN x range uoc luong (giong het ban proton)
 BLOCK_SAFETY_FACTOR = 5.0       # ALPHA: be day KHOI target = BLOCK_SAFETY_FACTOR x zmax tally (rieng cho alpha)
 MIN_ZMAX_CM = 2.0e-7            # san toi thieu 2 nm, giong ban proton/PHITS
+PART_THR_GEV = "-1.0E-6"        # nguong transport 1 keV (truoc day -1.0E-5 = 10 keV: alpha 15 keV
+                                # chi duoc theo doi tu 15 -> 10 keV, Range o 15-50 keV hut nang)
 
 # ---------------------------------------------------------------------------
 # Helper fixed-column 10-cot - GIONG HET ban proton, KHONG SUA (da verify).
@@ -206,7 +208,7 @@ def build_input(material: str, energy_kev: float, range_um_estimate: float) -> s
         card_name("BEAMPOS") + field(0.0) + field(0.0) + field(sci(z0_offset_cm, 3))
     )
     partthr_line = (
-        card_name("PART-THR") + field("-1.0E-5") + field(PROJECTILE_SDUM)
+        card_name("PART-THR") + field(PART_THR_GEV) + field(PROJECTILE_SDUM)
     )
     usrbin_dose_1 = (
         card_name("USRBIN") + field(10.0) + field("DOSE") + field(-21.0)
@@ -242,8 +244,8 @@ TARGET       5 +target
 VACUUM       5 +outerbnd -target
 END
 GEOEND
-MATERIAL         5.0    10.811      2.34       0.0                 0.0BORON
-MATERIAL        57.0   138.905     6.145       0.0                 0.0LANTHANU
+MATERIAL         5.0       0.0      2.34       0.0                 0.0BORON
+MATERIAL        57.0       0.0     6.145       0.0                 0.0LANTHANU
 {material_block}
 ASSIGNMA    BLCKHOLE   BLKHOLE
 {card_name("ASSIGNMA")}{field(matname)}{field("TARGET")}
@@ -273,9 +275,11 @@ def main(srim_csv: str, out_dir: str):
             content, job_name = build_input(material, energy_kev, range_um_est)
             job_dir = out_dir / job_name
             job_dir.mkdir(parents=True, exist_ok=True)
-            (job_dir / f"{job_name}.inp").write_text(content)
+            # Luon ghi LF (khong de Windows tu doi sang CRLF)
+            with open(job_dir / f"{job_name}.inp", "w", newline="\n") as f:
+                f.write(content)
             count += 1
-            tally_zmax_um = max(5.0 * range_um_est, MIN_ZMAX_CM * 1e4)
+            tally_zmax_um = max(7.0 * range_um_est, MIN_ZMAX_CM * 1e4)
             block_zmax_um = max(SAFETY_MARGIN * range_um_est, MIN_ZMAX_CM * 1e4)
             print(f"  [{material}] {energy_kev:>9.2f} keV -> USRBIN zmax~{tally_zmax_um:.4f} um, "
                   f"block~{block_zmax_um*BLOCK_SAFETY_FACTOR:.4f} um, nz={NZ_BINS}")

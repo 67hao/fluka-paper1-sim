@@ -15,15 +15,15 @@ TARGET       5 +target
 VACUUM       5 +outerbnd -target
 END
 GEOEND
-MATERIAL         5.0    10.811      2.34       0.0                 0.0BORON
-MATERIAL        57.0   138.905     6.145       0.0                 0.0LANTHANU
+MATERIAL         5.0       0.0      2.34       0.0                 0.0BORON
+MATERIAL        57.0       0.0     6.145       0.0                 0.0LANTHANU
 MATERIAL         0.0       0.0    3.0099       0.0                 0.0S1GLASS
 COMPOUND     -0.1629     BORON   -0.4648    OXYGEN   -0.0302   SILICONS1GLASS
 COMPOUND     -0.0431   CALCIUM    -0.299  LANTHANU       0.0          S1GLASS
 ASSIGNMA    BLCKHOLE   BLKHOLE
 ASSIGNMA     S1GLASS    TARGET
 ASSIGNMA      VACUUM    VACUUM
-PART-THR     -1.0E-5  4-HELIUM
+PART-THR     -1.0E-6  4-HELIUM
 USRBIN          10.0      DOSE     -21.0       1.0       1.0  2.657E-2TDOSE
 USRBIN          -1.0      -1.0       0.0       1.0       1.0     500.0&
 USRBIN          10.0  4-HELIUM     -22.0       1.0       1.0  2.657E-2TFLUX

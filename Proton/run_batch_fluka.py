@@ -67,12 +67,27 @@ def find_unit_outputs(job_dir: Path, unit: int):
     return uniq
 
 
+def find_fluka_abort(job_dir: Path, job_stem: str) -> str:
+    """Tra ve dong bao loi neu FLUKA bi abort (tim trong *.log va *.out), rong neu OK."""
+    for f in sorted(job_dir.glob(f"{job_stem}*.log")) + sorted(job_dir.glob(f"{job_stem}*.out")):
+        try:
+            text = f.read_text(errors="replace")
+        except OSError:
+            continue
+        if "FLUKA ABORTED" in text or "Abort called" in text:
+            for line in text.splitlines():
+                if line.strip().startswith("STOP") and "ABORTED" not in line:
+                    return f"{f.name}: {line.strip()}"
+            return f"{f.name}: FLUKA ABORTED"
+    return ""
+
+
 def run_one(job_dir: Path, fluka_cmd: str, outputs_dir: Path, cycles: int):
     """Chay 1 job FLUKA, tra ve (ten_job, thanh_cong, thong_bao_loi)."""
-    inp_files = list(job_dir.glob("*.inp"))
-    if not inp_files:
-        return job_dir.name, False, "khong tim thay file .inp trong thu muc job"
-    inp_file = inp_files[0]
+    # Chi lay dung <ten thu muc>.inp (glob("*.inp")[0] co the chon nham file thua)
+    inp_file = job_dir / f"{job_dir.name}.inp"
+    if not inp_file.exists():
+        return job_dir.name, False, f"khong tim thay {inp_file.name} trong thu muc job"
     job_stem = inp_file.stem  # ten job KHONG duoi .inp - rfluka can dang nay
 
     try:
@@ -81,6 +96,12 @@ def run_one(job_dir: Path, fluka_cmd: str, outputs_dir: Path, cycles: int):
             cwd=str(job_dir),
             capture_output=True, text=True, timeout=1800,
         )
+
+        # FLUKA abort (vd "STOP DEPRECATED MATERIAL WHAT(2) SETTING") van co the
+        # tra ve returncode 0 -> doc *.log / *.out de bat loi ro rang.
+        abort_msg = find_fluka_abort(job_dir, job_stem)
+        if abort_msg:
+            return job_stem, False, f"FLUKA ABORTED: {abort_msg}"
 
         dose_files = find_unit_outputs(job_dir, 21)
         flux_files = find_unit_outputs(job_dir, 22)

@@ -45,7 +45,12 @@ DENSITY = {"s1": 3.0099, "s2": 3.1999, "s3": 3.3899, "s4": 3.5799, "s5": 3.7699,
 SRIM_TABLE_MATERIAL = "s6"   # vat lieu co bang SRIM that, 5 vat lieu con lai scale theo mat do (chi de chon mesh)
 PROJECTILE = "PROTON"
 NZ_BINS = 300
-SAFETY_MARGIN = 1.6
+SAFETY_MARGIN = 2.5          # zmax tally = SAFETY_MARGIN x range SRIM. 1.6 la KHONG DU: range
+                             # PHITS/FLUKA o 15 keV ~1.4x SRIM projected range (+ multiple scattering)
+BLOCK_SAFETY_FACTOR = 3.0    # be day KHOI target = BLOCK_SAFETY_FACTOR x zmax tally (truoc day = 1x,
+                             # proton xuyen qua bien target -> Range bi cat cut tai zmax)
+PART_THR_GEV = "-1.0E-6"     # nguong transport 1 keV (truoc day -1.0E-5 = 10 keV: proton 15 keV chi
+                             # duoc theo doi tu 15 -> 10 keV, Range o 15-50 keV hut nang)
 MIN_ZMAX_CM = 2.0e-7   # san toi thieu 2 nm, giong ban PHITS
 
 # ---------------------------------------------------------------------------
@@ -133,6 +138,7 @@ def load_srim_range_table(path):
 def build_input(material: str, energy_kev: float, range_um_estimate: float) -> str:
     energy_gev = energy_kev / 1.0e6
     zmax_cm = max(SAFETY_MARGIN * range_um_estimate * 1e-4, MIN_ZMAX_CM)
+    block_cm = zmax_cm * BLOCK_SAFETY_FACTOR   # lop dem phia sau vung tally
     # BEAMPOS: lui vao VACUUM mot doan TY LE voi zmax (khong dung fixed -1e-4
     # nhu ban sua tay, vi zmax co the rat nho o nang luong thap -> offset co
     # dinh se lon hon ca target). San toi thieu 1e-9 cm de tranh trung bien.
@@ -150,7 +156,7 @@ def build_input(material: str, energy_kev: float, range_um_estimate: float) -> s
         card_name("BEAMPOS") + field(0.0) + field(0.0) + field(sci(z0_offset_cm, 3))
     )
     partthr_line = (
-        card_name("PART-THR") + field("-1.0E-5") + field(PROJECTILE)
+        card_name("PART-THR") + field(PART_THR_GEV) + field(PROJECTILE)
     )
     usrbin_dose_1 = (
         card_name("USRBIN") + field(10.0) + field("DOSE") + field(-21.0)
@@ -179,15 +185,15 @@ GEOBEGIN                                                              COMBNAME
     0    0          MSP/Range geometry - 1 khoi {material.upper()} glass
 SPH blkbody    0.0 0.0 0.0 300.0
 SPH outerbnd   0.0 0.0 0.0 100.0
-RPP target     -1.0 1.0 -1.0 1.0 0.0 {sci(zmax_cm, 4)}
+RPP target     -1.0 1.0 -1.0 1.0 0.0 {sci(block_cm, 4)}
 END
 BLKHOLE      5 +blkbody -outerbnd
 TARGET       5 +target
 VACUUM       5 +outerbnd -target
 END
 GEOEND
-MATERIAL         5.0    10.811      2.34       0.0                 0.0BORON
-MATERIAL        57.0   138.905     6.145       0.0                 0.0LANTHANU
+MATERIAL         5.0       0.0      2.34       0.0                 0.0BORON
+MATERIAL        57.0       0.0     6.145       0.0                 0.0LANTHANU
 {material_block}
 ASSIGNMA    BLCKHOLE   BLKHOLE
 {card_name("ASSIGNMA")}{field(matname)}{field("TARGET")}
@@ -216,9 +222,12 @@ def main(srim_csv: str, out_dir: str):
             content, job_name = build_input(material, energy_kev, range_um_est)
             job_dir = out_dir / job_name
             job_dir.mkdir(parents=True, exist_ok=True)
-            (job_dir / f"{job_name}.inp").write_text(content)
+            # Luon ghi LF (khong de Windows tu doi sang CRLF)
+            with open(job_dir / f"{job_name}.inp", "w", newline="\n") as f:
+                f.write(content)
             count += 1
-            print(f"  [{material}] {energy_kev:>9.2f} keV -> zmax~{SAFETY_MARGIN*range_um_est:.4f} um, nz={NZ_BINS}")
+            print(f"  [{material}] {energy_kev:>9.2f} keV -> zmax~{SAFETY_MARGIN*range_um_est:.4f} um, "
+                  f"block~{SAFETY_MARGIN*BLOCK_SAFETY_FACTOR*range_um_est:.4f} um, nz={NZ_BINS}")
 
     print(f"\nDa sinh {count} job trong '{out_dir}'.")
     print("LUU Y: MOI verify 1-2 file dau qua flair truoc khi chay hang loat "
