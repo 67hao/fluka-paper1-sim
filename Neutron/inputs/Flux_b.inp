@@ -137,7 +137,7 @@ OUTBLACK     4 +BLKBODY -S057
 END
 GEOEND
 
-MATERIAL         5.0    10.811      2.340       0.0                 0.0BORON
+MATERIAL         5.0       0.0      2.34       0.0       0.0       0.0BORON
 *
 * --- Material assignment (WATER predefined; BORON = MATERIAL card above) ---
 ASSIGNMA    BLCKHOLE   VOID101
