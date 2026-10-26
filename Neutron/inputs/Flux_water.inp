@@ -110,6 +110,8 @@ BUFFER       4 +S047 -S046
 OUTBLACK     4 +BLKBODY -S047
 END
 GEOEND
+* Tat neutron pointwise (FLUKA 4-5 can data/neutron) -> dung multigroup
+LOW-PWXS        -1.0                      BLCKHOLE  @LASTMAT
 *
 * --- Material assignment (WATER = FLUKA predefined material; no material/target) ---
 ASSIGNMA    BLCKHOLE   VOID101

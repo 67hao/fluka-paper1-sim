@@ -130,6 +130,8 @@ BUFFER       4 +S057 -S056
 OUTBLACK     4 +BLKBODY -S057
 END
 GEOEND
+* Tat neutron pointwise (FLUKA 4-5 can data/neutron) -> dung multigroup
+LOW-PWXS        -1.0                      BLCKHOLE  @LASTMAT
 
 MATERIAL        57.0       0.0     6.145       0.0       0.0       0.0LANTHANU
 * --- Material assignment (WATER predefined; LANTHANU = MATERIAL card above) ---

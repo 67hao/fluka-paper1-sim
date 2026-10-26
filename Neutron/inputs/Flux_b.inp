@@ -136,6 +136,8 @@ BUFFER       4 +S057 -S056
 OUTBLACK     4 +BLKBODY -S057
 END
 GEOEND
+* Tat neutron pointwise (FLUKA 4-5 can data/neutron) -> dung multigroup
+LOW-PWXS        -1.0                      BLCKHOLE  @LASTMAT
 
 MATERIAL         5.0       0.0      2.34       0.0       0.0       0.0BORON
 *
@@ -248,6 +250,7 @@ BIASING       0.0000    1.000032000.0000    BUFFER
 
 * --- USRTRACK tallies: neutron flux < 1eV (thermal), one per 2cm water shell ---
 
+USRTRACK      1.0000   NEUTRON  -21.0000    WAT01124160.9419    1.0000TH011
 USRTRACK   1.000E-09 1.000E-14                                         &
 USRTRACK      1.0000   NEUTRON  -22.0000    WAT01227377.9328    1.0000TH012
 USRTRACK   1.000E-09 1.000E-14                                         &

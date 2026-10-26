@@ -131,6 +131,8 @@ BUFFER       4 +S057 -S056
 OUTBLACK     4 +BLKBODY -S057
 END
 GEOEND
+* Tat neutron pointwise (FLUKA 4-5 can data/neutron) -> dung multigroup
+LOW-PWXS        -1.0                      BLCKHOLE  @LASTMAT
 
 MATERIAL         8.0       0.0     1.141       0.0                 0.0LOXYGEN
 LOW-MAT      LOXYGEN       0.0       0.0       0.0       0.0       0.0OXYGEN
