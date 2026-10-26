@@ -1,6 +1,0 @@
-*.lis
-*.out
-*.log
-*fort*
-*.csv
-!manifest.csv

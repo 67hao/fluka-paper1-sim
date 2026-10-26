@@ -185,6 +185,9 @@ def build_sample_input(mat: str, energy_kev: float, thickness_cm: float) -> str:
     lines.append("VACUUM       5 +outerbnd -coll1o -sample -coll2o -detect -source")
     lines.append("END")
     lines.append("GEOEND")
+    # FLUKA 4-5: DEFAULTS PRECISIO bat neutron pointwise (can data/neutron, khong co trong goi .deb) -> tat
+    lines.append("* Tat neutron pointwise (FLUKA 4-5 can data/neutron) -> dung multigroup")
+    lines.append(whatline("LOW-PWXS", [-1.0, None, None, "BLCKHOLE", "@LASTMAT"]))
     lines.append(whatline("MATERIAL", [5.0, 0.0, 2.34, 0.0, None, 0.0], sdum="BORON"))
     lines.append(whatline("MATERIAL", [57.0, 0.0, 6.145, 0.0, None, 0.0], sdum="LANTHANU"))
     lines.append(whatline("MATERIAL", [53.0, 0.0, 4.93, 0.0, None, 0.0], sdum="IODINE"))
@@ -253,6 +256,9 @@ def build_blank_input(energy_kev: float, thickness_cm: float) -> str:
     lines.append("VACUUM       5 +outerbnd -coll1o -coll2o -detect -source")
     lines.append("END")
     lines.append("GEOEND")
+    # FLUKA 4-5: DEFAULTS PRECISIO bat neutron pointwise (can data/neutron, khong co trong goi .deb) -> tat
+    lines.append("* Tat neutron pointwise (FLUKA 4-5 can data/neutron) -> dung multigroup")
+    lines.append(whatline("LOW-PWXS", [-1.0, None, None, "BLCKHOLE", "@LASTMAT"]))
     lines.append(whatline("MATERIAL", [5.0, 0.0, 2.34, 0.0, None, 0.0], sdum="BORON"))
     lines.append(whatline("MATERIAL", [57.0, 0.0, 6.145, 0.0, None, 0.0], sdum="LANTHANU"))
     lines.append(whatline("MATERIAL", [53.0, 0.0, 4.93, 0.0, None, 0.0], sdum="IODINE"))

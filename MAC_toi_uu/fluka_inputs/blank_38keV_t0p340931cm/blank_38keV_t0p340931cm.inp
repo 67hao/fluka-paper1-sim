@@ -25,6 +25,8 @@ DETECTOR     5 +detect
 VACUUM       5 +outerbnd -coll1o -coll2o -detect -source
 END
 GEOEND
+* Tat neutron pointwise (FLUKA 4-5 can data/neutron) -> dung multigroup
+LOW-PWXS        -1.0                      BLCKHOLE  @LASTMAT
 MATERIAL         5.0       0.0      2.34       0.0                 0.0BORON
 MATERIAL        57.0       0.0     6.145       0.0                 0.0LANTHANU
 MATERIAL        53.0       0.0      4.93       0.0                 0.0IODINE

@@ -15,6 +15,8 @@ TARGET       5 +target
 VACUUM       5 +outerbnd -target
 END
 GEOEND
+* FLUKA 4-5: DEFAULTS PRECISIO bat neutron pointwise (can data/neutron, khong co trong goi .deb) -> tat
+LOW-PWXS        -1.0                      BLCKHOLE  @LASTMAT
 MATERIAL         5.0       0.0      2.34       0.0                 0.0BORON
 MATERIAL        57.0       0.0     6.145       0.0                 0.0LANTHANU
 MATERIAL         0.0       0.0    3.9599       0.0                 0.0S6GLASS
